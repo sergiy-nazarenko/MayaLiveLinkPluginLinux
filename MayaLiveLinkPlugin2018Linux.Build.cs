@@ -8,7 +8,7 @@ public abstract class MayaLiveLinkPluginBaseLinux : ModuleRules
 	public MayaLiveLinkPluginBaseLinux(ReadOnlyTargetRules Target) : base(Target)
 	{
 		// For LaunchEngineLoop.cpp include.  You shouldn't need to add anything else to this line.
-		PrivateIncludePaths.AddRange( new string[] { "Runtime/Launch/Public", "Runtime/Launch/Private", "/home/snazarenko/Downloads/usr/include", "/usr/include" }  );
+		PrivateIncludePaths.AddRange( new string[] { "Runtime/Launch/Public", "Runtime/Launch/Private", "/usr/include" }  );
 
 		// Unreal dependency modules
 		PrivateDependencyModuleNames.AddRange( new string[] 

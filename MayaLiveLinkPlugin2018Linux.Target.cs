@@ -28,8 +28,8 @@ public abstract class MayaLiveLinkPluginTargetLinuxBase : TargetRules
         if(Target.Configuration != UnrealTargetConfiguration.Development)
         {
             OutputName = string.Format("{0}-{1}-{2}", OutputName, Target.Platform, Target.Configuration);
-        }
-        PostBuildSteps.Add(string.Format("copy /Y \"$(EngineDir)\\Binaries\\Linux\\{0}.so\" \"$(EngineDir)\\Binaries\\Linux\\{0}.so\" >nul: & echo Copied output to $(EngineDir)\\Binaries\\Linux\\{0}.so", OutputName));
+        }//MayaLiveLinkPlugin2018Linux.so
+        PostBuildSteps.Add(string.Format("cp \"$(EngineDir)/Binaries/Linux/libMayaLiveLinkPlugin2018Linux.so\" \"$(EngineDir)/Binaries/Linux/{0}.so\" >nul: & echo Copied output to $(EngineDir)/Binaries/Linux/{0}.so", OutputName));
     }
 }
 

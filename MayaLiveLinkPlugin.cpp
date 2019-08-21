@@ -1,4 +1,4 @@
-﻿// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+﻿﻿// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "RequiredProgramMainCPPInclude.h"
 #include "Misc/CommandLine.h"
@@ -15,7 +15,6 @@
 DEFINE_LOG_CATEGORY_STATIC(LogBlankMayaPlugin, Log, All);
 
 IMPLEMENT_APPLICATION(MayaLiveLinkPlugin, "MayaLiveLinkPlugin");
-
 
 // Maya includes
 #define DWORD BananaFritters
@@ -195,7 +194,10 @@ void OutputRotation(const MMatrix& M)
 	V.X = RadToDeg(Euler[0]);
 	V.Y = RadToDeg(Euler[1]);
 	V.Z = RadToDeg(Euler[2]);
-	MGlobal::displayInfo(*V.ToString());
+
+	std::string test2 = std::string(TCHAR_TO_UTF8(*V.ToString()));
+
+	MGlobal::displayInfo(test2.c_str());
 }
 
 struct IStreamedEntity
@@ -239,49 +241,57 @@ struct FLiveLinkStreamedJointHeirarchySubject : IStreamedEntity
 	{}
 
 	virtual bool ShouldDisplayInUI() const { return true; }
-	virtual MString GetDisplayText() const { return MString("Character: ") + MString(*SubjectName.ToString()) + " ( " + RootDagPath.fullPathName() + " )"; }
+	virtual MString GetDisplayText() const 
+	{ 
+
+		std::string test2 = std::string(TCHAR_TO_UTF8(*SubjectName.ToString()));
+		return MString("Character: ") + MString(test2.c_str()) + " ( " + RootDagPath.fullPathName() + " )"; 
+	}
 
 	virtual bool ValidateSubject() const
 	{
-		MStatus Status;
-		bool bIsValid = RootDagPath.isValid(&Status);
 
-		TCHAR* StatusMessage = TEXT("Unset");
+		MStatus stat;
+		bool bIsValid = RootDagPath.isValid(&stat);
 
-		if (Status == MS::kSuccess)
+		std::string StatusMessage("Unset");
+
+		if (stat == MS::kSuccess)
 		{
-			StatusMessage = TEXT("Success");
+			StatusMessage = std::string("Success");
 		}
-		else if (Status == MS::kFailure)
+		else if (stat == MS::kFailure)
 		{
-			StatusMessage = TEXT("Failure");
+			StatusMessage = std::string("Failure");
 		}
 		else
 		{
-			StatusMessage = TEXT("Other");
+			StatusMessage = std::string("Other");
 		}
 
-		FPlatformMisc::LowLevelOutputDebugStringf(TEXT("Testing %s for removal Path:%s Valid:%s Status:%s\n"), *SubjectName.ToString(), RootDagPath.fullPathName().asWChar(), bIsValid ? TEXT("true") : TEXT("false"), StatusMessage);
-		if (Status != MS::kFailure && bIsValid)
+		FPlatformMisc::LowLevelOutputDebugStringf(TEXT("Testing %s for removal Path:%s Valid:%s Status:%s\n"), 
+			*SubjectName.ToString(), RootDagPath.fullPathName().asWChar(), bIsValid ? TEXT("true") : TEXT("false"), StatusMessage.c_str());
+		if (stat != MS::kFailure && bIsValid)
 		{
 			//Path checks out as valid
-			MFnIkJoint Joint(RootDagPath, &Status);
+			MFnIkJoint Joint(RootDagPath, &stat);
 
-			MVector returnvec = Joint.getTranslation(MSpace::kWorld, &Status);
-			if (Status == MS::kSuccess)
+			MVector returnvec = Joint.getTranslation(MSpace::kWorld, &stat);
+			if (stat == MS::kSuccess)
 			{
-				StatusMessage = TEXT("Success");
+				StatusMessage = std::string("Success");
 			}
-			else if (Status == MS::kFailure)
+			else if (stat == MS::kFailure)
 			{
-				StatusMessage = TEXT("Failure");
+				StatusMessage = std::string("Failure");
 			}
 			else
 			{
-				StatusMessage = TEXT("Other");
+				StatusMessage = std::string("Other");
 			}
 
-			FPlatformMisc::LowLevelOutputDebugStringf(TEXT("\tTesting %s for removal Path:%s Valid:%s Status:%s\n"), *SubjectName.ToString(), RootDagPath.fullPathName().asWChar(), bIsValid ? TEXT("true") : TEXT("false"), StatusMessage);
+			FPlatformMisc::LowLevelOutputDebugStringf(TEXT("\tTesting %s for removal Path:%s Valid:%s Status:%s\n"), 
+				*SubjectName.ToString(), RootDagPath.fullPathName().asWChar(), bIsValid ? TEXT("true") : TEXT("false"), StatusMessage.c_str());
 		}
 		return bIsValid;
 	}
@@ -420,10 +430,10 @@ public:
 
 	void StreamCamera(MDagPath CameraPath, double StreamTime, int32 FrameNumber)
 	{
-		MStatus Status;
-		bool bIsValid = CameraPath.isValid(&Status);
+		MStatus stat;
+		bool bIsValid = CameraPath.isValid(&stat);
 
-		if (bIsValid && Status == MStatus::kSuccess)
+		if (bIsValid && stat == MStatus::kSuccess)
 		{
 			MFnCamera C(CameraPath);
 
@@ -464,9 +474,9 @@ public:
 
 	virtual void OnStream(double StreamTime, int32 FrameNumber)
 	{
-		MStatus Status;
-		M3dView ActiveView = M3dView::active3dView(&Status);
-		if (Status == MStatus::kSuccess)
+		MStatus stat;
+		M3dView ActiveView = M3dView::active3dView(&stat);
+		if (stat == MStatus::kSuccess)
 		{
 			MDagPath CameraDag;
 			if (ActiveView.getCamera(CameraDag) == MStatus::kSuccess)
@@ -488,7 +498,11 @@ public:
 	FLiveLinkStreamedCameraSubject(FName InSubjectName, MDagPath InDagPath) : FLiveLinkBaseCameraStreamedSubject(InSubjectName), CameraPath(InDagPath) {}
 
 	virtual bool ShouldDisplayInUI() const { return true; }
-	virtual MString GetDisplayText() const { return MString("Camera: ") + *SubjectName.ToString() + " ( " + CameraPath.fullPathName() + " )"; }
+	virtual MString GetDisplayText() const 
+	{ 
+		std::string test2 = std::string(TCHAR_TO_UTF8(*SubjectName.ToString()));
+		return MString("Camera: ") + *test2.c_str() + " ( " + CameraPath.fullPathName() + " )"; 
+	}
 
 	virtual void OnStream(double StreamTime, int32 FrameNumber)
 	{
@@ -510,7 +524,11 @@ public:
 	{}
 
 	virtual bool ShouldDisplayInUI() const { return true; }
-	virtual MString GetDisplayText() const { return MString("Prop: ") + MString(*SubjectName.ToString()) + " ( " + RootDagPath.fullPathName() + " )"; }
+	virtual MString GetDisplayText() const 
+	{ 
+		std::string test2 = std::string(TCHAR_TO_UTF8(*SubjectName.ToString()));
+		return MString("Prop: ") + MString(test2.c_str()) + " ( " + RootDagPath.fullPathName() + " )"; 
+	}
 
 	virtual bool ValidateSubject() const {return true;}
 
@@ -791,7 +809,8 @@ public:
 	{
 		if ((bAllowLogVerbosity && Verbosity <= ELogVerbosity::Log) || (Verbosity <= ELogVerbosity::Display))
 		{
-			MGlobal::displayInfo(V);
+			std::string test2 = std::string(TCHAR_TO_UTF8(V));
+			MGlobal::displayInfo(test2.c_str());
 		}
 	}
 
@@ -880,12 +899,12 @@ MStatus RefreshViewportCallbacks()
 		{
 			for (uintptr_t i = 0; i < EditorPanels.length(); ++i)
 			{
-				MStatus Status;
-				MCallbackId CallbackId = MUiMessage::add3dViewPostRenderMsgCallback(EditorPanels[i], OnPostRenderViewport, NULL, &Status);
+				MStatus stat;
+				MCallbackId CallbackId = MUiMessage::add3dViewPostRenderMsgCallback(EditorPanels[i], OnPostRenderViewport, NULL, &stat);
 
-				MREPORTERROR(Status, "MUiMessage::add3dViewPostRenderMsgCallback()");
+				MREPORTERROR(stat, "MUiMessage::add3dViewPostRenderMsgCallback()");
 
-				if (Status != MStatus::kSuccess)
+				if (stat != MStatus::kSuccess)
 				{
 					ExitStatus = MStatus::kFailure;
 					continue;
@@ -893,11 +912,11 @@ MStatus RefreshViewportCallbacks()
 
 				PostRenderCallbackIds.Add(i, CallbackId);
 
-				CallbackId = MUiMessage::addUiDeletedCallback(EditorPanels[i], OnViewportClosed, reinterpret_cast<void*>(i), &Status);
+				CallbackId = MUiMessage::addUiDeletedCallback(EditorPanels[i], OnViewportClosed, reinterpret_cast<void*>(i), &stat);
 				
-				MREPORTERROR(Status, "MUiMessage::addUiDeletedCallback()");
+				MREPORTERROR(stat, "MUiMessage::addUiDeletedCallback()");
 				
-				if (Status != MStatus::kSuccess)
+				if (stat != MStatus::kSuccess)
 				{
 					ExitStatus = MStatus::kFailure;
 					continue;

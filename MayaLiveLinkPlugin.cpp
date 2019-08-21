@@ -1,5 +1,7 @@
-﻿﻿// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+﻿// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
+
+// #include "Definitions.h"
 #include "RequiredProgramMainCPPInclude.h"
 #include "Misc/CommandLine.h"
 #include "Async/TaskGraphInterfaces.h"
@@ -847,8 +849,8 @@ void OnConnectionStatusChanged()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TMap<uintptr_t, MCallbackId> PostRenderCallbackIds;
-TMap<uintptr_t, MCallbackId> ViewportDeletedCallbackIds;
+TMap<int32, MCallbackId> PostRenderCallbackIds;
+TMap<int32, MCallbackId> ViewportDeletedCallbackIds;
 
 void OnPostRenderViewport(const MString &str, void* ClientData)
 {
@@ -868,13 +870,13 @@ void OnViewportClosed(void* ClientData)
 
 void ClearViewportCallbacks()
 {
-	for (TPair<uintptr_t, MCallbackId>& Pair : PostRenderCallbackIds)
+	for (TPair<int32, MCallbackId>& Pair : PostRenderCallbackIds)
 	{
 		MMessage::removeCallback(Pair.Value);
 	}
 	PostRenderCallbackIds.Reset();
 
-	for (TPair<uintptr_t, MCallbackId>& Pair : ViewportDeletedCallbackIds)
+	for (TPair<int32, MCallbackId>& Pair : ViewportDeletedCallbackIds)
 	{
 		MMessage::removeCallback(Pair.Value);
 	}

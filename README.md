@@ -1,6 +1,6 @@
 # MayaLiveLinkPluginLinux for UE 4.22.3
 
-## It is not compiled yet but has some progress :)
+## It is compiled but maya crashes :)
 
 Build command like that:
 ```

@@ -849,8 +849,8 @@ void OnConnectionStatusChanged()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TMap<int32, MCallbackId> PostRenderCallbackIds;
-TMap<int32, MCallbackId> ViewportDeletedCallbackIds;
+TMap<uint64, MCallbackId> PostRenderCallbackIds;
+TMap<uint64, MCallbackId> ViewportDeletedCallbackIds;
 
 void OnPostRenderViewport(const MString &str, void* ClientData)
 {
@@ -859,7 +859,7 @@ void OnPostRenderViewport(const MString &str, void* ClientData)
 
 void OnViewportClosed(void* ClientData)
 {
-	uintptr_t ViewIndex = reinterpret_cast<uintptr_t>(ClientData);
+	uint64 ViewIndex = reinterpret_cast<uint64>(ClientData);
 
 	MMessage::removeCallback(PostRenderCallbackIds[ViewIndex]);
 	PostRenderCallbackIds.Remove(ViewIndex);
@@ -870,13 +870,13 @@ void OnViewportClosed(void* ClientData)
 
 void ClearViewportCallbacks()
 {
-	for (TPair<int32, MCallbackId>& Pair : PostRenderCallbackIds)
+	for (TPair<uint64, MCallbackId>& Pair : PostRenderCallbackIds)
 	{
 		MMessage::removeCallback(Pair.Value);
 	}
 	PostRenderCallbackIds.Reset();
 
-	for (TPair<int32, MCallbackId>& Pair : ViewportDeletedCallbackIds)
+	for (TPair<uint64, MCallbackId>& Pair : ViewportDeletedCallbackIds)
 	{
 		MMessage::removeCallback(Pair.Value);
 	}
@@ -899,7 +899,7 @@ MStatus RefreshViewportCallbacks()
 
 		if (ExitStatus == MStatus::kSuccess)
 		{
-			for (uintptr_t i = 0; i < EditorPanels.length(); ++i)
+			for (uint64 i = 0; i < EditorPanels.length(); ++i)
 			{
 				MStatus stat;
 				MCallbackId CallbackId = MUiMessage::add3dViewPostRenderMsgCallback(EditorPanels[i], OnPostRenderViewport, NULL, &stat);

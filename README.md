@@ -13,3 +13,9 @@ cp Engine/Source/ThirdParty/SDL2/SDL-gui-backend/lib/Linux/x86_64-unknown-linux-
 cp Engine/Source/ThirdParty/jemalloc/lib/Linux/x86_64-unknown-linux-gnu/libjemalloc_fPIC.a libjemalloc.a
 cp Engine/Source/ThirdParty/zlib/zlib-1.2.5/Lib/Linux/x86_64-unknown-linux-gnu/libz_fPIC.a libz.a
 ```
+Reproduce the crash:
+```
+1. Start maya and load plugins
+2. Start unreal and start LiveLink
+3. Select in unreal LiveLink->Maya and maya crash
+```

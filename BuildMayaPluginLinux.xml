@@ -1,8 +1,8 @@
 <?xml version='1.0' ?>
 <BuildGraph xmlns="http://www.epicgames.com/BuildGraph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.epicgames.com/BuildGraph ../../../Engine/Build/Graph/Schema.xsd" >
   <Property Name="LocalSourceDir" Value="$(RootDir)\Engine\Source\Programs\MayaLiveLinkPlugin"/>
-  <Property Name="LocalStagingDir" Value="$(LocalSourceDir)\Staging"/>
-  <Property Name="LocalBinaryDir" Value="$(RootDir)\Engine\Binaries\Linux"/>
+  <Property Name="LocalStagingDir" Value="/home/snazarenko/packages/maya_dev/1.0.0/os-CentOS_Linux-7/plug-ins"/>
+  <Property Name="LocalBinaryDir" Value="$(RootDir)/Engine/Binaries/Linux"/>
   
   <Agent Name="MayaLiveLinkPlugin" Type="Linux">
     <Node Name="Compile UnrealHeaderTool Linux">
@@ -14,13 +14,11 @@
     </Node>
 	
 	<Node Name="Stage Maya Plugin Module" Requires="Compile Maya 2018 Linux">
-		<Copy From="$(LocalSourceDir)\ReadMe.txt" To="$(LocalStagingDir)\ReadMe.txt" />
+		<Copy From="$(LocalSourceDir)/ReadMe.txt" To="$(LocalStagingDir)/ReadMe.txt" />
 		
-		<Copy From="$(LocalBinaryDir)\MayaLiveLinkPlugin2018Linux.so" To="$(LocalStagingDir)\MayaLiveLink2018\LiveLink\plug-ins\MayaLiveLinkPlugin2018Linux.so" />
-		<Copy From="$(LocalSourceDir)\MayaLiveLinkUI.py" To="$(LocalStagingDir)\MayaLiveLink2018\LiveLink\plug-ins\MayaLiveLinkUI.py" />
-		<Copy From="$(LocalSourceDir)\LiveLink.mod" To="$(LocalStagingDir)\MayaLiveLink2018\LiveLink.mod" />
+		<Copy From="$(LocalBinaryDir)/libMayaLiveLinkPlugin2018Linux.so" To="$(LocalStagingDir)/MayaLiveLink.so" />
+		<Copy From="$(LocalSourceDir)/MayaLiveLinkUI.py" To="$(LocalStagingDir)/MayaLiveLinkUI.py" />
 		
-		<Zip FromDir="$(LocalStagingDir)" ZipFile="$(LocalStagingDir)\LiveLinkMaya.zip"/>
 	</Node>
   </Agent>
 </BuildGraph>
